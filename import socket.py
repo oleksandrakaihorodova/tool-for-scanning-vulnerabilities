@@ -1,29 +1,28 @@
 import socket
-import threading
 import concurrent.futures
 
-# Функція для сканування одного порту
+# Function to scan a single port
 def scan_port(ip, port):
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(1)
             result = s.connect_ex((ip, port))
             if result == 0:
-                print(f"Порт {port} відкритий")
+                print(f"Port {port} is open")
             else:
-                print(f"Порт {port} закритий")
+                print(f"Port {port} is closed")
     except Exception as e:
-        print(f"Помилка при скануванні порту {port}: {e}")
+        print(f"Error scanning port {port}: {e}")
 
-# Головна функція, яка використовує багатопоточність для сканування портів
+# Main function that uses multithreading to scan ports
 def main(ip, start_port, end_port):
     with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
         for port in range(start_port, end_port + 1):
             executor.submit(scan_port, ip, port)
 
-# Приклад використання
+# Example usage
 if __name__ == "__main__":
-    target_ip = input("Введіть IP адресу для сканування: ")
-    start_port = int(input("Введіть початковий порт для сканування: "))
-    end_port = int(input("Введіть кінцевий порт для сканування: "))
+    target_ip = input("Enter IP address for scanning: ")
+    start_port = int(input("Enter start port for scanning: "))
+    end_port = int(input("Enter end port for scanning: "))
     main(target_ip, start_port, end_port)
